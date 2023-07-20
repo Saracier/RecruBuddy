@@ -13,7 +13,7 @@ namespace RecruBuddy
             Console.WriteLine("Hello! What Can I do for you?");
             bool shouldAppBeRunnign = true;
             var JobOffersService = new JobOffersService();
-            List<JobOffer> JobOffers = JobOffersService.GetJobOfferList();
+            List<JobOffer> jobOffers = JobOffersService.GetJobOfferList();
             while (shouldAppBeRunnign)
             {
                 Console.WriteLine("");
@@ -28,23 +28,23 @@ namespace RecruBuddy
                 {
                     case '1':
 
-                        JobOffer JobOfferToAdd;
+                        JobOffer jobOfferToAdd;
                         try
                         {
-                            JobOfferToAdd = JobOffersService.GetDataForJobOffer();
+                            jobOfferToAdd = JobOffersService.GetDataForJobOffer();
                         }
                         catch (Exception error)
                         {
                             Console.WriteLine(error.Message);
                             continue;
                         }
-                        JobOffersService.AddNewJobOffer(JobOfferToAdd);
+                        JobOffersService.AddNewJobOffer(jobOfferToAdd);
                         Console.WriteLine("Job Offer added");
                         break;
 
                     case '2':
 
-                        JobOffer JobOfferToEdit;
+                        JobOffer jobOfferToEdit;
 
                         Console.WriteLine("Please enter job offer name to edit:");
                         var nameJobToEdit = Console.ReadLine();
@@ -64,36 +64,36 @@ namespace RecruBuddy
 
                         try
                         {
-                            JobOfferToEdit = JobOffersService.GetDataForJobOffer();
+                            jobOfferToEdit = JobOffersService.GetDataForJobOffer();
                         }
                         catch (Exception error)
                         {
                             Console.WriteLine(error.Message);
                             continue;
                         }
-                        JobOffersService.OvveriteJobOffer(idElementToEdit, JobOfferToEdit);
+                        JobOffersService.OverrideJobOffer(idElementToEdit, jobOfferToEdit);
                         Console.WriteLine("Job Offer edited");
                         break;
 
                     case '3':
-                        JobOffers = JobOffersService.GetJobOfferList();
-                        foreach (var JobOffer in JobOffers)
+                        jobOffers = JobOffersService.GetJobOfferList();
+                        foreach (var JobOffer in jobOffers)
                         {
                             JobOffer.GetDetails();
                         }
                         break;
 
                     case '4':
-                        JobOffer JobOfferToDelete;
+                        JobOffer jobOfferToDelete;
                         Console.WriteLine("Please enter job offer name to edit:");
-                        var nameJobToDelete = Console.ReadLine();
+                        var JobToDelete = Console.ReadLine();
 
-                        if (String.IsNullOrEmpty(nameJobToDelete))
+                        if (String.IsNullOrEmpty(JobToDelete))
                         {
                             throw new Exception("An error occured. I cannot add this job offer");
                         }
 
-                        int idElementToDelete = JobOffersService.FindNumberOfJobOffer(nameJobToDelete);
+                        int idElementToDelete = JobOffersService.FindNumberOfJobOffer(JobToDelete);
 
                         if (idElementToDelete == -1)
                         {
@@ -101,9 +101,9 @@ namespace RecruBuddy
                             break;
                         }
 
-                        JobOfferToDelete = JobOffersService.GetJobOfferList()[idElementToDelete];
+                        jobOfferToDelete = JobOffersService.GetJobOfferList()[idElementToDelete];
 
-                        JobOffersService.DeleteJobOffer(JobOfferToDelete);
+                        JobOffersService.DeleteJobOffer(jobOfferToDelete);
                         Console.WriteLine("Job Offer deleted");
                         break;
 
