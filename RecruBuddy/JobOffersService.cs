@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Identity.Client;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,6 @@ namespace RecruBuddy
 {
     public class JobOffersService
     {
-        private int id = 0;
         private List<JobOffer> jobOfferList = new List<JobOffer>();
 
         public List<JobOffer> GetJobOfferList() { return jobOfferList; }
@@ -29,49 +29,55 @@ namespace RecruBuddy
             string status = Console.ReadLine();
             ValidateStringInput(status);
 
-            var jobOfferToAdd = new JobOffer(Id: id, CompanyName: companyName, PositionName: positionName, Description: descripciton, Status: status);
+            var jobOfferToAdd = new JobOffer(CompanyName: companyName, PositionName: positionName, Description: descripciton, Status: status);
             return jobOfferToAdd;
         }
 
         public void AddNewJobOffer(JobOffer JobOffer)
         {
             this.jobOfferList.Add(JobOffer);
-            id++;
         }
 
         private void ValidateStringInput(string input) {
-            if(String.IsNullOrEmpty(input)) {
+            if(String.IsNullOrEmpty(input.Trim())) {
                 throw new Exception("An error occured. I cannot add this job offer");
             };
         }
 
-        public void OverrideJobOffer(int id, JobOffer JobOfferToEdit)
+        public void OverrideJobOffer(Guid id, JobOffer JobOfferToEdit)
         {
-            jobOfferList[id] = JobOfferToEdit;
+            List<JobOffer> CurrentJobOfferList = GetJobOfferList();
+            for (int i = 0; i < CurrentJobOfferList.Count; i++)
+                {
+                if (CurrentJobOfferList[i].Id == id) 
+                {
+                    jobOfferList[i] = JobOfferToEdit;
+                }
+            }
         }
 
-        public int FindNumberOfJobOffer(string nameParameter)
+        public Guid FindNumberOfJobOffer(string nameParameter)
         {
-            int idJobToDelete;
-            bool isSuccesyfullyParsed = int.TryParse(nameParameter, out idJobToDelete);
+            Guid idJobToDelete;
+            bool isSuccesyfullyParsed = Guid.TryParse(nameParameter, out idJobToDelete);
 
             if (!isSuccesyfullyParsed)
             {
-                throw new Exception("An error occured. I cannot add this job offer");
+                Console.WriteLine("An error occured. I cannot add this job offer");
             }
-            int idElementToEdit = -1;
+            Guid idElementToEdit;
 
             List<JobOffer> JobOffers = this.GetJobOfferList();
             for (int i = 0; i < JobOffers.Count; i++)
             {
                 if (idJobToDelete == JobOffers[i].Id)
                 {
-                    idElementToEdit = i;
-                    break;
+                    idElementToEdit = JobOffers[i].Id;
+                    return idElementToEdit;
                 }
             }
 
-            return idElementToEdit;
+            throw new Exception("No such offer was found");
         }
 
         public void DeleteJobOffer(JobOffer JobOfferToDelete)

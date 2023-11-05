@@ -8,16 +8,16 @@ namespace RecruBuddy
 {
     public class JobOffer : IJobOffer
     {
-        public JobOffer(int Id, string CompanyName, string PositionName, string Status, string Description)
+        public JobOffer(string CompanyName, string PositionName, string Status, string Description)
         {
-            this.Id=Id;
+            this.Id = Guid.NewGuid();
             this.CompanyName = CompanyName;
             this.PositionName = PositionName;
             this.Status = Status;
             this.Description = Description;
         }
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string CompanyName { get; set; }
         public string PositionName { get; set; }
         public string Description { get; set; }
