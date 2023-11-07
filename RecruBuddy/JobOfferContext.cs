@@ -9,8 +9,8 @@ namespace RecruBuddy
 {
     public class JobOfferContext : DbContext
     {
-    //    public JobOfferContext(DbContextOptions<JobOfferContext> options)
-    //: base(options) { }
+        //    public JobOfferContext(DbContextOptions<JobOfferContext> options)
+        //: base(options) { }
 
         public DbSet<JobOffer> JobOffers { get; set; }
 

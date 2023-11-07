@@ -11,7 +11,7 @@ namespace RecruBuddy
     {
         static void Main()
         {
-            using var db = new JobOfferContext();
+            using JobOfferContext db = new JobOfferContext();
             Console.WriteLine("Hello! What Can I do for you?");
             bool shouldAppBeRunnign = true;
             var JobOffersService = new JobOffersService();
@@ -40,7 +40,7 @@ namespace RecruBuddy
                             Console.WriteLine(error.Message);
                             continue;
                         }
-                        JobOffersService.AddNewJobOffer(jobOfferToAdd);
+                        JobOffersService.AddNewJobOffer(jobOfferToAdd, db);
                         Console.WriteLine("Job Offer added");
                         break;
 
@@ -50,31 +50,19 @@ namespace RecruBuddy
                             JobOffer jobOfferToEdit;
 
                             Console.WriteLine("Please enter id of job offer to edit:");
-                            var nameJobToEdit = Console.ReadLine();
+                            var idJobToEdit = Console.ReadLine();
 
-                            if (String.IsNullOrEmpty(nameJobToEdit))
+                            if (String.IsNullOrEmpty(idJobToEdit))
                             {
                                 throw new Exception("An error occured. I cannot add this job offer");
                             }
 
-                            Guid idElementToEdit = JobOffersService.FindNumberOfJobOffer(nameJobToEdit);
+                            Guid idElementToEdit = JobOffersService.FindNumberOfJobOffer(idJobToEdit, db);
 
-                            //if (idElementToEdit == -1)
-                            //{
-                            //    Console.WriteLine("Sorry, I haven't found such item");
-                            //    break;
-                            //}
 
-                            // try
-                            //{
                                 jobOfferToEdit = JobOffersService.GetDataForJobOffer();
-                            //}
-                            //catch (Exception error)
-                            //{
-                            //    Console.WriteLine(error.Message);
-                            //    continue;
-                            //}
-                            JobOffersService.OverrideJobOffer(idElementToEdit, jobOfferToEdit);
+
+                            JobOffersService.OverrideJobOffer(idElementToEdit, jobOfferToEdit, db);
                             Console.WriteLine("Job Offer edited");
                             break;
                         }
@@ -86,7 +74,11 @@ namespace RecruBuddy
                         
 
                     case '3':
-                        var jobOffers = JobOffersService.GetJobOfferList();
+                        var jobOffers = JobOffersService.GetJobOfferList(db);
+                        if (jobOffers == null) {
+                            Console.WriteLine("There is currently no job offers.");
+                            break;
+                        }
                         foreach (var JobOffer in jobOffers)
                         {
                             JobOffer.GetDetails();
@@ -97,7 +89,7 @@ namespace RecruBuddy
                         try
                         {
                             JobOffer jobOfferToDelete = null ;
-                            Console.WriteLine("Please enter job offer name to edit:");
+                            Console.WriteLine("Please enter job offer id to edit:");
                             var JobToDelete = Console.ReadLine();
 
                             if (String.IsNullOrEmpty(JobToDelete))
@@ -105,19 +97,9 @@ namespace RecruBuddy
                                 throw new Exception("An error occured. I cannot find this job offer");
                             }
 
-                            Guid idElementToDelete = JobOffersService.FindNumberOfJobOffer(JobToDelete);
+                            Guid idElementToDelete = JobOffersService.FindIdOfJobOffer(JobToDelete, db);
 
-                            //if (idElementToDelete == -1)
-                            //{
-                            //    throw new Exception("Sorry, I haven't found such item");
-
-                            //}
-                            //
-                            // Pytanie do Yanexa:
-                            // Czemu mimo, że jak walnę literówkę w usuwanym opisie, to i tak mi przechodzi throw i kontynuuje mi się program do tej linijki?
-
-
-                            List<JobOffer> CurrentJobOfferList = JobOffersService.GetJobOfferList();
+                            List<JobOffer> CurrentJobOfferList = JobOffersService.GetJobOfferList(db);
                             for (int i = 0; i < CurrentJobOfferList.Count; i++)
                             {
                                 if (CurrentJobOfferList[i].Id == idElementToDelete)
@@ -131,7 +113,7 @@ namespace RecruBuddy
                                 throw new Exception("An error occured. I cannot find this job offer");
                             }
 
-                            JobOffersService.DeleteJobOffer(jobOfferToDelete);
+                            JobOffersService.DeleteJobOffer(jobOfferToDelete, db);
                             Console.WriteLine("Job Offer deleted");
                             break;
                         }

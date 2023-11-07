@@ -10,9 +10,12 @@ namespace RecruBuddy
 {
     public class JobOffersService
     {
-        private List<JobOffer> jobOfferList = new List<JobOffer>();
+        //private List<JobOffer> jobOfferList = new List<JobOffer>();
 
-        public List<JobOffer> GetJobOfferList() { return jobOfferList; }
+        public List<JobOffer> GetJobOfferList(JobOfferContext db) {
+            return db.JobOffers.ToList();
+            //return jobOfferList; 
+        }
 
         public JobOffer GetDataForJobOffer()
         {
@@ -33,9 +36,11 @@ namespace RecruBuddy
             return jobOfferToAdd;
         }
 
-        public void AddNewJobOffer(JobOffer JobOffer)
+        public void AddNewJobOffer(JobOffer JobOffer, JobOfferContext db)
         {
-            this.jobOfferList.Add(JobOffer);
+            //this.jobOfferList.Add(JobOffer);
+            db.Add(JobOffer);
+            db.SaveChanges();
         }
 
         private void ValidateStringInput(string input) {
@@ -44,45 +49,51 @@ namespace RecruBuddy
             };
         }
 
-        public void OverrideJobOffer(Guid id, JobOffer JobOfferToEdit)
+        public void OverrideJobOffer(Guid id, JobOffer JobOfferToEdit, JobOfferContext db)
         {
-            List<JobOffer> CurrentJobOfferList = GetJobOfferList();
-            for (int i = 0; i < CurrentJobOfferList.Count; i++)
-                {
-                if (CurrentJobOfferList[i].Id == id) 
-                {
-                    jobOfferList[i] = JobOfferToEdit;
-                }
-            }
+            JobOffer JobOfferInDb = db.JobOffers.FirstOrDefault(j => j.Id == id);
+            if(JobOfferInDb == null) { throw new Exception("entry does not exist on database"); };
+            JobOfferInDb = JobOfferToEdit;
+            db.SaveChanges();
+            //List<JobOffer> CurrentJobOfferList = GetJobOfferList();
+            //for (int i = 0; i < CurrentJobOfferList.Count; i++)
+            //    {
+            //    if (CurrentJobOfferList[i].Id == id) 
+            //    {
+            //        jobOfferList[i] = JobOfferToEdit;
+            //    }
+            //}
         }
 
-        public Guid FindNumberOfJobOffer(string nameParameter)
+        public Guid FindIdOfJobOffer(string idParameter, JobOfferContext db)
         {
-            Guid idJobToDelete;
-            bool isSuccesyfullyParsed = Guid.TryParse(nameParameter, out idJobToDelete);
+            Guid idJobToProceed;
+            bool isSuccesyfullyParsed = Guid.TryParse(idParameter, out idJobToProceed);
 
             if (!isSuccesyfullyParsed)
             {
-                Console.WriteLine("An error occured. I cannot add this job offer");
+                Console.WriteLine("An error occured. I cannot proceed with this job offer");
             }
-            Guid idElementToEdit;
 
-            List<JobOffer> JobOffers = this.GetJobOfferList();
+            List<JobOffer> JobOffers = this.GetJobOfferList(db);
             for (int i = 0; i < JobOffers.Count; i++)
             {
-                if (idJobToDelete == JobOffers[i].Id)
+                if (idJobToProceed == JobOffers[i].Id)
                 {
-                    idElementToEdit = JobOffers[i].Id;
-                    return idElementToEdit;
+                    return JobOffers[i].Id;
                 }
             }
 
             throw new Exception("No such offer was found");
         }
 
-        public void DeleteJobOffer(JobOffer JobOfferToDelete)
+        public void DeleteJobOffer(JobOffer JobOfferToDelete, JobOfferContext db)
         {
-            this.jobOfferList.Remove(JobOfferToDelete);
+            JobOffer JobOfferToProceed = db.JobOffers.FirstOrDefault(j => j.Id == JobOfferToDelete.Id);
+            if (JobOfferToProceed == null) throw new Exception("An error occured. I cannot proceed with this job offer");
+            db.Remove(JobOfferToProceed);
+            db.SaveChanges();
+            //this.jobOfferList.Remove(JobOfferToDelete);
         }
     }
 }
