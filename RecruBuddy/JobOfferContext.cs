@@ -16,7 +16,9 @@ namespace RecruBuddy
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=JobOfferDb;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(
+                "Server=(localdb)\\mssqllocaldb;Database=JobOfferDb;Trusted_Connection=True;"
+            );
         }
     }
 }

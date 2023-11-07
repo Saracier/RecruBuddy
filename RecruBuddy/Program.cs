@@ -16,7 +16,6 @@ namespace RecruBuddy
             bool shouldAppBeRunnign = true;
             var JobOffersService = new JobOffersService();
             while (shouldAppBeRunnign)
-
             {
                 Console.WriteLine("------------------------");
                 Console.WriteLine("Type 1 to add new Job offer");
@@ -34,14 +33,13 @@ namespace RecruBuddy
                         try
                         {
                             jobOfferToAdd = JobOffersService.GetDataForJobOffer();
+                            JobOffersService.AddNewJobOffer(jobOfferToAdd, db);
+                            Console.WriteLine("Job Offer added");
                         }
                         catch (Exception error)
                         {
                             Console.WriteLine(error.Message);
-                            continue;
                         }
-                        JobOffersService.AddNewJobOffer(jobOfferToAdd, db);
-                        Console.WriteLine("Job Offer added");
                         break;
 
                     case '2':
@@ -54,76 +52,92 @@ namespace RecruBuddy
 
                             if (String.IsNullOrEmpty(idJobToEdit))
                             {
-                                throw new Exception("An error occured. I cannot add this job offer");
+                                throw new Exception(
+                                    "An error occured. I cannot add this job offer"
+                                );
                             }
 
-                            Guid idElementToEdit = JobOffersService.FindNumberOfJobOffer(idJobToEdit, db);
+                            Guid idElementToEdit = JobOffersService.FindIdOfJobOffer(
+                                idJobToEdit,
+                                db
+                            );
 
-
-                                jobOfferToEdit = JobOffersService.GetDataForJobOffer();
+                            jobOfferToEdit = JobOffersService.GetDataForJobOffer();
 
                             JobOffersService.OverrideJobOffer(idElementToEdit, jobOfferToEdit, db);
                             Console.WriteLine("Job Offer edited");
-                            break;
                         }
                         catch (Exception error)
                         {
                             Console.WriteLine(error.Message);
-                            break;
                         }
-                        
+                        break;
 
                     case '3':
-                        var jobOffers = JobOffersService.GetJobOfferList(db);
-                        if (jobOffers == null) {
-                            Console.WriteLine("There is currently no job offers.");
-                            break;
-                        }
-                        foreach (var JobOffer in jobOffers)
+                        try
                         {
-                            JobOffer.GetDetails();
+                            var jobOffers = JobOffersService.GetJobOfferList(db);
+                            if (jobOffers == null)
+                            {
+                                Console.WriteLine("There is currently no job offers.");
+                                break;
+                            }
+                            foreach (var JobOffer in jobOffers)
+                            {
+                                JobOffer.GetDetails();
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
                         }
                         break;
 
                     case '4':
                         try
                         {
-                            JobOffer jobOfferToDelete = null ;
+                            JobOffer jobOfferToDelete = null;
                             Console.WriteLine("Please enter job offer id to edit:");
                             var JobToDelete = Console.ReadLine();
 
                             if (String.IsNullOrEmpty(JobToDelete))
                             {
-                                throw new Exception("An error occured. I cannot find this job offer");
+                                throw new Exception(
+                                    "An error occured. I cannot find this job offer"
+                                );
                             }
 
-                            Guid idElementToDelete = JobOffersService.FindIdOfJobOffer(JobToDelete, db);
+                            Guid idElementToDelete = JobOffersService.FindIdOfJobOffer(
+                                JobToDelete,
+                                db
+                            );
 
-                            List<JobOffer> CurrentJobOfferList = JobOffersService.GetJobOfferList(db);
+                            List<JobOffer> CurrentJobOfferList = JobOffersService.GetJobOfferList(
+                                db
+                            );
                             for (int i = 0; i < CurrentJobOfferList.Count; i++)
                             {
                                 if (CurrentJobOfferList[i].Id == idElementToDelete)
                                 {
-                                     jobOfferToDelete = CurrentJobOfferList[i];
+                                    jobOfferToDelete = CurrentJobOfferList[i];
                                 }
                             }
 
-                            if(jobOfferToDelete == null) 
+                            if (jobOfferToDelete == null)
                             {
-                                throw new Exception("An error occured. I cannot find this job offer");
+                                throw new Exception(
+                                    "An error occured. I cannot find this job offer"
+                                );
                             }
 
                             JobOffersService.DeleteJobOffer(jobOfferToDelete, db);
                             Console.WriteLine("Job Offer deleted");
-                            break;
                         }
-                        catch (Exception error) 
+                        catch (Exception error)
                         {
                             Console.WriteLine(error.Message);
-                            break;
-
                         }
-                        
+                        break;
 
                     case '9':
                         Console.WriteLine("bye");
@@ -135,8 +149,6 @@ namespace RecruBuddy
                         break;
                 }
             }
-
-
         }
     }
 }

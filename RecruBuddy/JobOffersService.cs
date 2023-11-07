@@ -12,9 +12,10 @@ namespace RecruBuddy
     {
         //private List<JobOffer> jobOfferList = new List<JobOffer>();
 
-        public List<JobOffer> GetJobOfferList(JobOfferContext db) {
+        public List<JobOffer> GetJobOfferList(JobOfferContext db)
+        {
             return db.JobOffers.ToList();
-            //return jobOfferList; 
+            //return jobOfferList;
         }
 
         public JobOffer GetDataForJobOffer()
@@ -32,7 +33,12 @@ namespace RecruBuddy
             string status = Console.ReadLine();
             ValidateStringInput(status);
 
-            var jobOfferToAdd = new JobOffer(CompanyName: companyName, PositionName: positionName, Description: descripciton, Status: status);
+            JobOffer jobOfferToAdd = new JobOffer(
+                CompanyName: companyName,
+                PositionName: positionName,
+                Description: descripciton,
+                Status: status
+            );
             return jobOfferToAdd;
         }
 
@@ -43,8 +49,10 @@ namespace RecruBuddy
             db.SaveChanges();
         }
 
-        private void ValidateStringInput(string input) {
-            if(String.IsNullOrEmpty(input.Trim())) {
+        private void ValidateStringInput(string input)
+        {
+            if (String.IsNullOrEmpty(input.Trim()))
+            {
                 throw new Exception("An error occured. I cannot add this job offer");
             };
         }
@@ -52,13 +60,21 @@ namespace RecruBuddy
         public void OverrideJobOffer(Guid id, JobOffer JobOfferToEdit, JobOfferContext db)
         {
             JobOffer JobOfferInDb = db.JobOffers.FirstOrDefault(j => j.Id == id);
-            if(JobOfferInDb == null) { throw new Exception("entry does not exist on database"); };
-            JobOfferInDb = JobOfferToEdit;
+            if (JobOfferInDb == null)
+            {
+                throw new Exception("entry does not exist on database");
+            }
+            ;
+            JobOfferInDb.CompanyName = JobOfferToEdit.CompanyName;
+            JobOfferInDb.PositionName = JobOfferToEdit.PositionName;
+            JobOfferInDb.Description = JobOfferToEdit.Description;
+            JobOfferInDb.Status = JobOfferToEdit.Status;
+
             db.SaveChanges();
             //List<JobOffer> CurrentJobOfferList = GetJobOfferList();
             //for (int i = 0; i < CurrentJobOfferList.Count; i++)
             //    {
-            //    if (CurrentJobOfferList[i].Id == id) 
+            //    if (CurrentJobOfferList[i].Id == id)
             //    {
             //        jobOfferList[i] = JobOfferToEdit;
             //    }
@@ -89,8 +105,14 @@ namespace RecruBuddy
 
         public void DeleteJobOffer(JobOffer JobOfferToDelete, JobOfferContext db)
         {
-            JobOffer JobOfferToProceed = db.JobOffers.FirstOrDefault(j => j.Id == JobOfferToDelete.Id);
-            if (JobOfferToProceed == null) throw new Exception("An error occured. I cannot proceed with this job offer");
+            JobOffer? JobOfferToProceed = db.JobOffers.FirstOrDefault(
+                j => j.Id == JobOfferToDelete.Id
+            );
+            if (JobOfferToProceed == null)
+            {
+                throw new Exception("An error occured. I cannot proceed with this job offer");
+            }
+
             db.Remove(JobOfferToProceed);
             db.SaveChanges();
             //this.jobOfferList.Remove(JobOfferToDelete);

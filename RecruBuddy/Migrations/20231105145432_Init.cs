@@ -13,25 +13,26 @@ namespace RecruBuddy.Migrations
         {
             migrationBuilder.CreateTable(
                 name: "JobOffers",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PositionName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
+                columns: table =>
+                    new
+                    {
+                        Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                        CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                        PositionName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                        Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                        Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_JobOffers", x => x.Id);
-                });
+                }
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "JobOffers");
+            migrationBuilder.DropTable(name: "JobOffers");
         }
     }
 }

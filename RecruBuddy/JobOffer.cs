@@ -32,7 +32,5 @@ namespace RecruBuddy
             Console.WriteLine($"Status of this job offer is: {Status}");
             Console.WriteLine("");
         }
-
-
     }
 }
