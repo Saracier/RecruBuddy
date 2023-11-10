@@ -68,6 +68,8 @@
                 throw new Exception("An error occured. I cannot proceed with this job offer");
             }
 
+            MainMenuCommands.addToFile(jobOfferToDelete);
+
             _db.Remove(JobOfferToProceed);
             _db.SaveChanges();
         }

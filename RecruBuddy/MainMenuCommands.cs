@@ -1,4 +1,7 @@
-﻿namespace RecruBuddy
+﻿using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+
+namespace RecruBuddy
 {
     internal class MainMenuCommands
     {
@@ -201,6 +204,11 @@
             //}
 
             jobOffersService.DeleteJobOffer(jobOfferToDelete);
+        }
+
+        static public void addToFile(object objectToArchive) {
+            string objectSerialized = JsonConvert.SerializeObject(objectToArchive);
+            File.WriteAllText("./../../../../objectSerialized.json", objectSerialized);
         }
     }
 }
