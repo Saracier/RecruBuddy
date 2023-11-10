@@ -8,7 +8,7 @@ namespace RecruBuddy
 {
     interface IJobOffer
     {
-        Guid Id { get; set; }
+        int Id { get; set; }
         string CompanyName { get; set; }
         string PositionName { get; set; }
         string Description { get; set; }

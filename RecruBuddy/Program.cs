@@ -14,7 +14,7 @@ namespace RecruBuddy
             using JobOfferContext db = new JobOfferContext();
             Console.WriteLine("Hello! What Can I do for you?");
             bool shouldAppBeRunnign = true;
-            var JobOffersService = new JobOffersService();
+            var JobOffersService = new JobOffersService(db);
             while (shouldAppBeRunnign)
             {
                 Console.WriteLine("------------------------");
@@ -29,11 +29,11 @@ namespace RecruBuddy
                 {
                     case '1':
 
-                        JobOffer jobOfferToAdd;
                         try
                         {
+                        JobOffer jobOfferToAdd;
                             jobOfferToAdd = JobOffersService.GetDataForJobOffer();
-                            JobOffersService.AddNewJobOffer(jobOfferToAdd, db);
+                            JobOffersService.AddNewJobOffer(jobOfferToAdd);
                             Console.WriteLine("Job Offer added");
                         }
                         catch (Exception error)
@@ -57,14 +57,13 @@ namespace RecruBuddy
                                 );
                             }
 
-                            Guid idElementToEdit = JobOffersService.FindIdOfJobOffer(
-                                idJobToEdit,
-                                db
+                            int idElementToEdit = JobOffersService.FindIdOfJobOffer(
+                                idJobToEdit
                             );
 
                             jobOfferToEdit = JobOffersService.GetDataForJobOffer();
 
-                            JobOffersService.OverrideJobOffer(idElementToEdit, jobOfferToEdit, db);
+                            JobOffersService.OverrideJobOffer(idElementToEdit, jobOfferToEdit);
                             Console.WriteLine("Job Offer edited");
                         }
                         catch (Exception error)
@@ -76,7 +75,7 @@ namespace RecruBuddy
                     case '3':
                         try
                         {
-                            var jobOffers = JobOffersService.GetJobOfferList(db);
+                            var jobOffers = JobOffersService.GetJobOfferList();
                             if (jobOffers == null)
                             {
                                 Console.WriteLine("There is currently no job offers.");
@@ -107,13 +106,12 @@ namespace RecruBuddy
                                 );
                             }
 
-                            Guid idElementToDelete = JobOffersService.FindIdOfJobOffer(
-                                JobToDelete,
-                                db
+                            int idElementToDelete = JobOffersService.FindIdOfJobOffer(
+                                JobToDelete
                             );
 
                             List<JobOffer> CurrentJobOfferList = JobOffersService.GetJobOfferList(
-                                db
+                                
                             );
                             for (int i = 0; i < CurrentJobOfferList.Count; i++)
                             {
