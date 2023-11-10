@@ -90,7 +90,7 @@
             throw new Exception("No such offer was found");
         }
 
-        public void DeleteJobOffer(JobOffer JobOfferToDelete, JobOfferContext _db)
+        public void DeleteJobOffer(JobOffer JobOfferToDelete)
         {
             JobOffer? JobOfferToProceed = _db.JobOffers.FirstOrDefault(
                 j => j.Id == JobOfferToDelete.Id
